@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Live Indian Time</title>
+  <style>
+    body {
+      background-color: #0f172a;
+      color: #38bdf8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+    }
+    .clock {
+      font-size: 4rem;
+      text-align: center;
+      padding: 20px;
+      border: 3px solid #38bdf8;
+      border-radius: 20px;
+      box-shadow: 0 0 30px #38bdf8;
+    }
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="clock">
+    <h1>Indian Standard Time (IST)</h1>
+    <div id="time">--:--:--</div>
+  </div>
+
+  <script>
+    function updateClock() {
+      // Get the time in India (UTC+5:30)
+      const now = new Date();
+      const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+      const indiaTime = new Date(utc + (5.5 * 3600000));
+
+      const hours = String(indiaTime.getHours()).padStart(2, '0');
+      const minutes = String(indiaTime.getMinutes()).padStart(2, '0');
+      const seconds = String(indiaTime.getSeconds()).padStart(2, '0');
+
+      document.getElementById('time').textContent = `${hours}:${minutes}:${seconds}`;
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock(); // Run immediately
+  </script>
+</body>
+</html>
