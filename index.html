@@ -2,54 +2,129 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Live Indian Time</title>
+  <title>Futuristic Indian Time Clock</title>
   <style>
     body {
-      background-color: #0f172a;
-      color: #38bdf8;
+      background-color: #0d0d0d;
+      margin: 0;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      color: #00ffff;
     }
+
     .clock {
-      font-size: 4rem;
-      text-align: center;
-      padding: 20px;
-      border: 3px solid #38bdf8;
-      border-radius: 20px;
-      box-shadow: 0 0 30px #38bdf8;
+      width: 300px;
+      height: 300px;
+      border: 8px solid #00ffff;
+      border-radius: 50%;
+      position: relative;
+      box-shadow: 0 0 40px #00ffff;
+      background: radial-gradient(circle at center, #111 60%, #222);
     }
-    h1 {
-      font-size: 1.5rem;
-      margin-bottom: 20px;
+
+    .center-dot {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: #00ffff;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 10px #00ffff;
+    }
+
+    .hand {
+      position: absolute;
+      width: 50%;
+      height: 2px;
+      background: #00ffff;
+      top: 50%;
+      transform-origin: 100%;
+      transform: rotate(90deg);
+      transition: transform 0.5s ease-in-out;
+      box-shadow: 0 0 8px #00ffff;
+    }
+
+    .minute {
+      height: 3px;
+      background: #00ccff;
+    }
+
+    .hour {
+      height: 5px;
+      background: #0099ff;
+      width: 35%;
+    }
+
+    .tick {
+      position: absolute;
+      width: 4px;
+      height: 10px;
+      background: #00ffff;
+      top: 0;
+      left: 50%;
+      transform-origin: bottom;
+      transform: rotate(var(--angle)) translateY(-140px);
+      opacity: 0.3;
+    }
+
+    h2 {
+      position: absolute;
+      bottom: -60px;
+      width: 100%;
+      text-align: center;
+      color: #00ffff;
+      font-weight: 400;
+      font-size: 1.2rem;
+      letter-spacing: 2px;
     }
   </style>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="clock">
-    <h1>Indian Standard Time (IST)</h1>
-    <div id="time">--:--:--</div>
+    <div class="hand hour" id="hour"></div>
+    <div class="hand minute" id="minute"></div>
+    <div class="hand" id="second"></div>
+    <div class="center-dot"></div>
+    <h2>Indian Standard Time</h2>
+
+    <!-- Hour ticks -->
+    <script>
+      for (let i = 0; i < 12; i++) {
+        const tick = document.createElement('div');
+        tick.className = 'tick';
+        tick.style.setProperty('--angle', `${i * 30}deg`);
+        document.querySelector('.clock').appendChild(tick);
+      }
+    </script>
   </div>
 
   <script>
     function updateClock() {
-      // Get the time in India (UTC+5:30)
       const now = new Date();
       const utc = now.getTime() + now.getTimezoneOffset() * 60000;
-      const indiaTime = new Date(utc + (5.5 * 3600000));
+      const indiaTime = new Date(utc + (5.5 * 60 * 60 * 1000));
 
-      const hours = String(indiaTime.getHours()).padStart(2, '0');
-      const minutes = String(indiaTime.getMinutes()).padStart(2, '0');
-      const seconds = String(indiaTime.getSeconds()).padStart(2, '0');
+      const seconds = indiaTime.getSeconds();
+      const minutes = indiaTime.getMinutes();
+      const hours = indiaTime.getHours();
 
-      document.getElementById('time').textContent = `${hours}:${minutes}:${seconds}`;
+      const secondDeg = seconds * 6;
+      const minuteDeg = minutes * 6 + seconds * 0.1;
+      const hourDeg = (hours % 12) * 30 + minutes * 0.5;
+
+      document.getElementById('second').style.transform = `rotate(${secondDeg}deg)`;
+      document.getElementById('minute').style.transform = `rotate(${minuteDeg}deg)`;
+      document.getElementById('hour').style.transform = `rotate(${hourDeg}deg)`;
     }
 
     setInterval(updateClock, 1000);
-    updateClock(); // Run immediately
+    updateClock();
   </script>
 </body>
 </html>
